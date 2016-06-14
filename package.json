@@ -4,6 +4,8 @@
   "description": "Prove of concept for full-text searching using elasticsearch and tika",
   "main": "src/index.js",
   "dependencies": {
+    "body-parser": "^1.15.1",
+    "elasticsearch": "^11.0.1",
     "express": "^4.13.4"
   },
   "devDependencies": {},
