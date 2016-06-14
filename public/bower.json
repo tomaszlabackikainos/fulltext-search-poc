@@ -1,0 +1,25 @@
+{
+  "name": "fulltext-search-poc-public",
+  "homepage": "https://github.com/tomaszlabackikainos/fulltext-search-poc",
+  "authors": [
+    "Tomasz Labacki <t.labacki@kainos.com>"
+  ],
+  "description": "",
+  "main": "",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "bootstrap": "^3.3.6",
+    "jquery": "^3.0.0"
+  },
+  "resolutions": {
+    "jquery": "1.9.1 - 2"
+  }
+}

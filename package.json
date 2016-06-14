@@ -1,0 +1,25 @@
+{
+  "name": "fulltext-search-poc",
+  "version": "1.0.0",
+  "description": "Prove of concept for full-text searching using elasticsearch and tika",
+  "main": "src/index.js",
+  "dependencies": {
+    "express": "^4.13.4"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tomaszlabackikainos/fulltext-search-poc.git"
+  },
+  "keywords": [
+    "elasticsearch",
+    "tika",
+    "fulltext"
+  ],
+  "author": "Tomasz Labacki",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tomaszlabackikainos/fulltext-search-poc/issues"
+  },
+  "homepage": "https://github.com/tomaszlabackikainos/fulltext-search-poc#readme"
+}
