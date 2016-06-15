@@ -35,7 +35,6 @@ app.get('/api/documents', function (req, res) {
 app.get('/api/documents/search', function (req, res) {
 
     var query = req.query.queryString;
-    console.info(query)
 
     if (query === undefined || query.trim() === "") {
         res.json({});
@@ -90,7 +89,6 @@ app.post('/api/documents', function (req, res) {
 
 app.delete('/api/documents/:id', function (req, res) {
     console.info("DELETE received");
-    console.info(req.params.id)
 
     elasticsearch.delete({
         index: "fulltext-search-poc",
@@ -102,6 +100,26 @@ app.delete('/api/documents/:id', function (req, res) {
             res.json({status: false})
         } else {
             res.json({status: true})
+        }
+    });
+});
+
+app.get('/api/documents/:id', function (req, res) {
+    console.info("GET document received, ");
+
+    elasticsearch.get({
+        index: "fulltext-search-poc",
+        type: "documents",
+        id: req.params.id
+    }, function (error, response) {
+        if (error !== undefined) {
+            console.error("An error occured while deleting document, " + error.toString());
+            res.json({status: false, error: error.toString()})
+        } else {
+            res.set("Content-Type", response._source.doc._content_type);
+            res.set("Content-Length", response._source.doc._content_length);
+            res.set("Content-Disposition", "attachment; filename=\"" + require("path").basename(response._source.doc._name) + "\";");
+            res.send(new Buffer(response._source.doc._content, "base64"));
         }
     });
 });

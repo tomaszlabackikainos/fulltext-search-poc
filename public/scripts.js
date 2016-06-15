@@ -44,9 +44,10 @@ $(".container").delegate("[title=delete]", "click", deleteDocument);
 $("#documents-list span.cpointer").click(reloadDocuments);
 
 $("#new-file-form").submit(function() {
-    var files = $(this).find("input[type=file]")[0].files;
+    var $this = $(this).find("input[type=file]");
+    var files = $this[0].files;
     if (files.length === 0) {
-        alert("Choose file first");
+        console.warn("Choose file first");
     } else {
         var reader = new FileReader();
         reader.readAsBinaryString(files[0]);
@@ -59,7 +60,10 @@ $("#new-file-form").submit(function() {
                 size: files[0].size
             }, () => {
                 console.info("Adding new document: data posted");
-                setTimeout(reloadDocuments, 1500);
+                setTimeout(function() {
+                    $this.val("");
+                    reloadDocuments();
+                }, 1500);
             }).fail(() => console.warn("Adding new document: error"));
         }
     }
@@ -67,11 +71,15 @@ $("#new-file-form").submit(function() {
 });
 
 $("#search-form").submit(function() {
-    var queryString = $(this).find("input[type=text]").val();
-    $.get('/api/documents/search', {queryString: queryString}, (data) => {
-        var temp = $("#mustache-search-results").html();
-        $("#search-results").html("").append(Mustache.render(temp, {queryString: queryString, documents: data}));
-    });
+    $("#search-results").html("");
+    var queryString = $(this).find("input[type=text]").val().trim();
+
+    if (queryString !== "") {
+        $.get('/api/documents/search', {queryString: queryString}, (data) => {
+            var temp = $("#mustache-search-results").html();
+            $("#search-results").append(Mustache.render(temp, {queryString: queryString, documents: data}));
+        });
+    }
 
     return false;
 });
