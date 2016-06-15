@@ -9,8 +9,8 @@ var elasticsearch = require('elasticsearch').Client({
 
 // public, static files (frontend)
 app.use(express.static('public'));
-app.use(bodyParser.json()); // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(bodyParser.json({limit: "10Mb"})); // for parsing application/json
+app.use(bodyParser.urlencoded({extended: true, limit: "10mb"})); // for parsing application/x-www-form-urlencoded
 
 // api functionalities ("backend")
 app.get('/api/documents', function (req, res) {
