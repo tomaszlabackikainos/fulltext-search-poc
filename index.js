@@ -28,7 +28,7 @@ app.get('/api/documents', function (req, res) {
     }).then(function (body) {
         res.json(body.hits.hits);
     }, function (error) {
-        console.info("An error occured while retrieving locations, " + error.toString());
+        console.error("An error occured while retrieving locations, " + error.toString());
     });
 });
 
@@ -56,7 +56,9 @@ app.get('/api/documents/search', function (req, res) {
         }).then(function (body) {
             res.json(body.hits.hits);
         }, function (error) {
-            console.info("An error occured while retrieving locations, " + error.toString());
+            if (error !== undefined) {
+                console.error("An error occured while retrieving locations, " + error.toString());
+            }
         });
     }
 
@@ -78,10 +80,30 @@ app.post('/api/documents', function (req, res) {
             },
         },
     }, function (error, response) {
-        // ...
+        if (error !== undefined) {
+            console.error("An error occured while saving document, " + error.toString());
+        }
     });
 
     res.json({status: true})
+});
+
+app.delete('/api/documents/:id', function (req, res) {
+    console.info("DELETE received");
+    console.info(req.params.id)
+
+    elasticsearch.delete({
+        index: "fulltext-search-poc",
+        type: "documents",
+        id: req.params.id
+    }, function (error, response) {
+        if (error !== undefined) {
+            console.error("An error occured while deleting document, " + error.toString());
+            res.json({status: false})
+        } else {
+            res.json({status: true})
+        }
+    });
 });
 
 app.listen(httpPort, function () {

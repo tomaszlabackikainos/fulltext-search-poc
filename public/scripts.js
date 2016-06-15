@@ -1,14 +1,47 @@
 var reloadDocuments = () => {
     console.info("Reloading documents: start");
     $.get('/api/documents', (data) => {
-        $("#documents-list span.label-info:first span:nth-child(2)").text(data.length);
         var temp = $("#mustache-document-list").html();
 
         $("#documents-list ul").remove();
         $("#documents-list").append(Mustache.render(temp, {documents: data}));
+        countDocuments();
         console.info("Reloading documents: complete");
     }).fail(() => console.warn("Reloading documents: error"))
 };
+
+var countDocuments = () => {
+    $("#documents-list span.label-info:first span:nth-child(2)").text(
+        $("#documents-list ul li").length
+    );
+}
+
+var deleteDocument = function() {
+    $.ajax({
+        url: $(this).attr("href"),
+        type: 'DELETE',
+        beforeSend: () => console.info("Deleting document: start"),
+        error: () => console.warn("Deleting document: error"),
+        success: (data) => {
+            if (data.status === undefined) {
+                console.warn("Deleting document: error, no status.");
+            } else if (data.status) {
+                console.info("Deleting document: complete");
+                $(this).closest("li").remove();
+                countDocuments();
+                $("#search-results").text("")
+            } else {
+                console.warn("Deleting document: error");
+            }
+        }
+    });
+
+    return false;
+};
+
+$(document).on("ready", reloadDocuments);
+$(".container").delegate("[title=delete]", "click", deleteDocument);
+$("#documents-list span.cpointer").click(reloadDocuments);
 
 $("#new-file-form").submit(function() {
     var files = $(this).find("input[type=file]")[0].files;
@@ -42,9 +75,3 @@ $("#search-form").submit(function() {
 
     return false;
 });
-
-$("#documents-list span.cpointer").click(reloadDocuments);
-
-$(document).on("ready", () => {
-    reloadDocuments();
-})
